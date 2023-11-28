@@ -52,6 +52,10 @@ def main():
     for do in kk_num[1]:
         kk_imgs.append(pg.transform.rotozoom(kk_img, do, 1.0))
 
+    # 新しい画像の挿入 ゲーム終了時点の画像
+    kk_img2 = pg.image.load("ex02/fig/4.png")
+    kk_img2 = pg.transform.rotozoom(kk_img2, 0, 2.5)
+
 
     kk_rct = kk_img.get_rect()  #こうかとんのれくとを抽出
     kk_rct.center = (900, 400)  #こうかとんの初期座標
@@ -63,6 +67,7 @@ def main():
     bb_rct.centerx = random.randint(0, WIDTH)  #x座標を設定
     bb_rct.centery = random.randint(0, HEIGHT)  #y座標を設定
     vx, vy = +5, -5
+    numnew = 100 #最初にゲームオーバーしないように少し大きい値を設定しておく
 
     clock = pg.time.Clock()
     tmr = 0
@@ -72,8 +77,17 @@ def main():
             if event.type == pg.QUIT: 
                 return
         if kk_rct.colliderect(bb_rct):
-            print("Game Over")
+            numnew = 0  #後に判定をおこなう関数を０にする
+        
+        # 少し後にゲーム終了する関数
+        numnew += 1
+
+        if numnew == 30:  #新しく設定したnumnewが30に到達したらゲームを終了する
+            print("GameOver")
             return
+        
+
+            
             
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
@@ -89,6 +103,8 @@ def main():
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         if sum_mv[0] != 0 or sum_mv[1] != 0:
             kk_img_new = kk_imgs[check_kouka(sum_mv)]  #kk_img_newを更新する
+        if numnew <= 99:  #一度爆弾に触れると画像が変換される。
+            kk_img_new = kk_img2
         screen.blit(kk_img_new, kk_rct)
 
         # 爆弾
