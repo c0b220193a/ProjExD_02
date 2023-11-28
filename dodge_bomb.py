@@ -25,12 +25,35 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return (yoko, tate)  #タプルを戻す
 
+def check_kouka(sum_mv):
+    """
+    こうかとんが進んでいる方向の画像番号を出力する関数
+    引数　こうかとんの進む先
+    戻り値　正しい画像番号の数値　数字
+    """
+    kakunum = [[0, +5, +5, +5, 0, -5, -5, -5],[-5, -5, 0, +5, +5, +5, 0, -5]]  #位置の選択肢
+    for i in range(8):  #８回ループし、一つずつの検証をおこなう
+        if (sum_mv[0] == kakunum[0][i] and sum_mv[1] == kakunum[1][i]):
+            return int(i)
+    
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    kk_img_han = pg.transform.flip(kk_img, True, False)
+    kk_imgs = []
+    kk_img_new = kk_img  #初期の定義をおこなう
+    kk_num = [[90, 45, 0, -45, -90], [45, 0, -45]]
+    for do in kk_num[0]:  #kk_imgsに角度におけるこうかとんの画像を追加
+        kk_imgs.append(pg.transform.rotozoom(kk_img_han, do, 1.0))
+    for do in kk_num[1]:
+        kk_imgs.append(pg.transform.rotozoom(kk_img, do, 1.0))
+
+
     kk_rct = kk_img.get_rect()  #こうかとんのれくとを抽出
     kk_rct.center = (900, 400)  #こうかとんの初期座標
 
@@ -65,7 +88,9 @@ def main():
         kk_rct.move_ip(sum_mv[0], sum_mv[1])
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
-        screen.blit(kk_img, kk_rct)
+        if sum_mv[0] != 0 or sum_mv[1] != 0:
+            kk_img_new = kk_imgs[check_kouka(sum_mv)]
+        screen.blit(kk_img_new, kk_rct)
 
         # 爆弾
         bb_rct.move_ip(vx, vy)  #練習２爆弾の移動処理
