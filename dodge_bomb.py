@@ -28,8 +28,9 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
 def check_kouka(sum_mv):
     """
     こうかとんが進んでいる方向の画像番号を出力する関数
-    引数　こうかとんの進む先
-    戻り値　正しい画像番号の数値　数字
+    引数 こうかとんの進む sum_mv のx軸とy軸を引数とする。
+    戻り値 正しい画像番号の数値 
+    (押されているキーに応じたkk_imgsにおいてふさわしい画像番号を出力)
     """
     kakunum = [[0, +5, +5, +5, 0, -5, -5, -5],[-5, -5, 0, +5, +5, +5, 0, -5]]  #位置の選択肢
     for i in range(8):  #８回ループし、一つずつの検証をおこなう
@@ -43,8 +44,8 @@ def main():
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
-    kk_img_han = pg.transform.flip(kk_img, True, False)
-    kk_imgs = []
+    kk_img_han = pg.transform.flip(kk_img, True, False)  #画像を反転して保存
+    kk_imgs = []  #こうかとんの角度を保存する画像のリストを作成する
     kk_img_new = kk_img  #初期の定義をおこなう
     kk_num = [[90, 45, 0, -45, -90], [45, 0, -45]]
     for do in kk_num[0]:  #kk_imgsに角度におけるこうかとんの画像を追加
@@ -79,12 +80,12 @@ def main():
         if kk_rct.colliderect(bb_rct):
             numnew = 0  #後に判定をおこなう関数を０にする
         
-        # 少し後にゲーム終了する関数
-        numnew += 1
+        # 少し後にゲーム終了するモノを判定する関数
+        numnew += 1  #numnewがtmrのようにカウントしていく。
 
         if numnew == 30:  #新しく設定したnumnewが30に到達したらゲームを終了する
-            print("GameOver")
-            return
+            print("GameOver")  #ゲームを終了する
+            return 
         
 
             
@@ -101,22 +102,22 @@ def main():
         kk_rct.move_ip(sum_mv[0], sum_mv[1])
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
-        if sum_mv[0] != 0 or sum_mv[1] != 0:
+        if sum_mv[0] != 0 or sum_mv[1] != 0:  #もし、キーボードが押されているならば
             kk_img_new = kk_imgs[check_kouka(sum_mv)]  #kk_img_newを更新する
-        if numnew <= 99:  #一度爆弾に触れると画像が変換される。
-            kk_img_new = kk_img2
+        if numnew <= 99:  #一度爆弾に触れると画像が変換される。爆弾に触れると
+            kk_img_new = kk_img2  #新しく挿入した画像を出力
         screen.blit(kk_img_new, kk_rct)
 
         # 爆弾
         for i in range(1, 11):  #爆弾の加速処理、時間が達したら条件に合わせて足される
-            if tmr == (i*100):
-                if vx >= 0:
+            if tmr == (i*100): #tmrが100の倍数になったとき
+                if vx >= 0:  #vxが０以上の時は加速度を１する
                     vx += 1
-                else:
+                else:  #vxが０未満の時は加速を-1する。
                     vx -= 1
-                if vy >= 0:
+                if vy >= 0:  #vyが０以上の時加速度を１する
                     vy += 1
-                else:
+                else:  #vyが０未満の時加速度を-1する。
                     vy -= 1
                 
         bb_rct.move_ip(vx, vy)  #練習２爆弾の移動処理
@@ -131,7 +132,7 @@ def main():
 
         pg.display.update()
         tmr += 1
-        clock.tick(50)
+        clock.tick(50)  #フレームレートを50に設定する。
 
 
 if __name__ == "__main__":
