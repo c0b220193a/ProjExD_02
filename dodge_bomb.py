@@ -18,6 +18,8 @@ def main():
     bb_rct = bb_img.get_rect()  #四角形を抽出
     bb_rct.centerx = random.randint(0, WIDTH)  #x座標を設定
     bb_rct.centery = random.randint(0, HEIGHT)  #y座標を設定
+    vx, vy = +5, -5
+
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -27,10 +29,11 @@ def main():
 
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
+        bb_rct.move_ip(vx, vy)  #練習２爆弾の移動処理
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
-        clock.tick(10)
+        clock.tick(50)
 
 
 if __name__ == "__main__":
