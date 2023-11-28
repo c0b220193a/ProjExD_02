@@ -35,8 +35,7 @@ def check_kouka(sum_mv):
     for i in range(8):  #８回ループし、一つずつの検証をおこなう
         if (sum_mv[0] == kakunum[0][i] and sum_mv[1] == kakunum[1][i]):
             return int(i)
-    
-
+        
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -89,10 +88,21 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         if sum_mv[0] != 0 or sum_mv[1] != 0:
-            kk_img_new = kk_imgs[check_kouka(sum_mv)]
+            kk_img_new = kk_imgs[check_kouka(sum_mv)]  #kk_img_newを更新する
         screen.blit(kk_img_new, kk_rct)
 
         # 爆弾
+        for i in range(10):  #爆弾の加速処理、時間が達したら条件に合わせて足される
+            if tmr == (i*100):
+                if vx >= 0:
+                    vx += 1
+                else:
+                    vx -= 1
+                if vy >= 0:
+                    vy += 1
+                else:
+                    vy -= 1
+                
         bb_rct.move_ip(vx, vy)  #練習２爆弾の移動処理
         yoko, tate = check_bound(bb_rct)
         if not yoko:
