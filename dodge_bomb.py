@@ -108,7 +108,7 @@ def main():
         screen.blit(kk_img_new, kk_rct)
 
         # 爆弾
-        for i in range(10):  #爆弾の加速処理、時間が達したら条件に合わせて足される
+        for i in range(1, 11):  #爆弾の加速処理、時間が達したら条件に合わせて足される
             if tmr == (i*100):
                 if vx >= 0:
                     vx += 1
